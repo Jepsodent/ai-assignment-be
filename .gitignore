@@ -1,6 +1,2 @@
 venv/
 __pycache__/
-data/train/normal
-data/train/tb
-data/val/normal
-data/val/tb
