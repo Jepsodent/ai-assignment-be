@@ -10,3 +10,9 @@ Commands:
 pip install -r requirement.txt -> to install requirements
 python train.py -> train and create model
 python main.py -> run main function
+
+How to run program:
+
+1. Add data set
+2. Run train.py
+3. Run main.py
