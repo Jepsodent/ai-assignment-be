@@ -1,22 +1,48 @@
-import tensorflow as tf
-import numpy as np
-from tensorflow.keras.preprocessing import image
-import os
+from fastapi import FastAPI, HTTPException, UploadFile, File
+from utils import get_prediction
 
-# Load model
-model = tf.keras.models.load_model('model/densenet121_tb.h5')
+app = FastAPI()
 
-# Load and preprocess image
-img_path = os.path.join(os.getcwd(), 'test.jpg')
-img = image.load_img(img_path, target_size=(224, 224))
-img_array = image.img_to_array(img) / 255.0
-img_array = np.expand_dims(img_array, axis=0)
+@app.post("/upload-image")
+async def upload_image(file: UploadFile = File( ... )):
+    if not file.content_type.startswith("image/"):
+        raise HTTPException(status_code = 400, detail = "File must be an image")
+    
+    contents = await file.read()
+    result = get_prediction(contents)
 
-# Predict
-prediction = model.predict(img_array)[0][0]
+    return result
 
-# Interpret result
-if prediction >= 0.5:
-    print(f"Prediction: TB ({prediction:.2f})")
-else:
-    print(f"Prediction: NORMAL ({1 - prediction:.2f})")
+# UploadFile is a class from FastAPI that wraps the uploaded files
+# It contains use methods such
+# file.filename, file.content_type, await file.read(), and file.file()
+
+# File(...) is a dependency inject from FastAPI that tells
+# "Expect this parameter to come from a file upload in a multipart/form-data request"
+
+# FastAPI tutorial: https://www.youtube.com/watch?v=iWS9ogMPOI0
+
+# JUST FOR REMEMBERING:
+# from pydantic import BaseModel
+
+# class Item(BaseModel):
+#     text: str = None
+#     is_done: bool = False
+
+# items: list[Item] = []
+
+# @app.post("/items", response_model = Item)
+# def create_item(item: Item):
+#     items.append(item)
+#     return item
+
+# @app.get("/items", response_model = list[Item])
+# def list_items():
+#     return items
+
+# @app.get("/items/{item_id}", response_model = Item)
+# def get_item(item_id: int):
+#     if 0 <= item_id < len(items):
+#         return items[item_id]
+#     else:
+#         raise HTTPException(status_code = 404, detail = "Item not found")
