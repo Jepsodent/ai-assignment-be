@@ -1,7 +1,7 @@
 import os
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.applications import DenseNet121
+from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras import layers, models, callbacks
 
 # Configuration
@@ -11,7 +11,10 @@ BATCH_SIZE = 32
 EPOCHS = 10
 
 # Data Loading
-train_gen = ImageDataGenerator(rescale=1./255)
+train_gen = ImageDataGenerator(rescale = 1./255,
+    zoom_range = 0.2,
+    width_shift_range = 0.02,
+    height_shift_range =0.02,)
 val_gen = ImageDataGenerator(rescale=1./255)
 
 train_ds = train_gen.flow_from_directory(
@@ -29,7 +32,7 @@ val_ds = val_gen.flow_from_directory(
 )
 
 # Model Setup
-base_model = DenseNet121(weights='imagenet', include_top=False, input_shape=(*IMG_SIZE, 3))
+base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(224,224,3))
 base_model.trainable = False
 
 x = layers.GlobalAveragePooling2D()(base_model.output)
