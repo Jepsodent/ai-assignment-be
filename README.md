@@ -13,5 +13,6 @@ python train.py -> train and create model
 uvicorn main:app --reload -> run main function
 
 How to run program:
+
 1. If model doesn't exist, run python train.py
-2. uvicorn main:app --reload -> create server, visit /docs for swagger documentation
+2. uvicorn src.main:app --reload -> create server, visit /docs for swagger documentation
