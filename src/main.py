@@ -1,15 +1,23 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File
-from utils import get_prediction
+from src.utils.prediction import get_prediction
+import tensorflow as tf
 
 app = FastAPI()
 
-@app.post("/upload-image")
+model = tf.keras.models.load_model('model/densenet121_tb.h5')
+
+# Routes
+@app.get('/')
+def read_root():
+    return {"message": "Selamat Datang"}
+
+@app.post("/predict")
 async def upload_image(file: UploadFile = File( ... )):
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code = 400, detail = "File must be an image")
     
     contents = await file.read()
-    result = get_prediction(contents)
+    result = get_prediction(contents, model)
 
     return result
 

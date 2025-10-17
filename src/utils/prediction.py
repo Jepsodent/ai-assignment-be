@@ -1,14 +1,10 @@
-import tensorflow as tf
 import numpy as np
 from tensorflow.keras.preprocessing import image
 from PIL import Image
 import io
 # import os
 
-def get_prediction(contents: bytes):
-    # Load model
-    model = tf.keras.models.load_model('model/densenet121_tb.h5')
-
+def get_prediction(contents: bytes, model):
     # Load and preprocess image
     img = Image.open(io.BytesIO(contents)).convert("RGB")
     img = img.resize((224, 224))
