@@ -4,3 +4,4 @@ tensorflow
 opencv-python
 numpy
 python-multipart
+fastapi[all]
