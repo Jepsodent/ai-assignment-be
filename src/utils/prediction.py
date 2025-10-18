@@ -18,6 +18,6 @@ def get_prediction(contents: bytes, model):
 
     # Interpret result
     if prediction >= 0.5:
-        return {"status": "TB", "confidence": float(prediction)}
+        return {"prediction": "tuberculosis", "confidence": float(prediction)}
     else:
-        return {"status": "NORMAL", "confidence": float(1 - prediction)}
+        return {"prediction": "normal", "confidence": float(1 - prediction)}
